@@ -27,7 +27,7 @@ The firewall separates the internal lab network from the external network (WAN).
     +-----+-----+                   +-----+------+
     | Kali Linux  |                 | Ubuntu      |
     |  Scanner    |                 |  Server     |
-    |192.168.50.10|                 |192.168.50.20|
+    |192.168.50.20|                 |192.168.50.10|
     +-------------+                 +-------------+
 
 ## Network Configuration
