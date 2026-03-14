@@ -140,6 +140,13 @@ guest ok = yes
 
 This allows machines in the lab network to access the shared folder.
 
+Optional security hardening (not performed in this lab):
+
+* change guest ok = no
+* introduce password access (-;
+*
+*
+
 ## Services Running on This Server
 
 The following services are running on this Ubuntu machine:
