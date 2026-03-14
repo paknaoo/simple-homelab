@@ -54,3 +54,34 @@ All machines in the LAN use static IP addressing.
 * Kali Linux is used for network scanning and analysis.
 * Ubuntu Server is used to host and test different services.
 * Static IP addressing simplifies lab configuration and documentation.
+
+## Network Design
+
+The lab uses VMware Workstation virtual networks together with a pfSense firewall to simulate a small internal network.
+
+### VMware Virtual Networks
+
+The following VMware networks are used in the lab:
+
+| Network | Type                | Purpose                                               |
+| ------- | ------------------- | ----------------------------------------------------- |
+| VMnet8  | NAT                 | Provides internet access to the pfSense WAN interface |
+| VMnet3  | Host-only (EasyLab) | Internal lab network                                  |
+
+**EasyLab network**
+
+Network: 192.168.50.0/24
+Name: EasyLab
+
+### pfSense Interfaces
+
+pfSense connects the two networks together.
+
+| Interface | Network          | Configuration    |
+| --------- | ---------------- | ---------------- |
+| WAN       | VMnet8           | DHCP             |
+| LAN       | VMnet3 (EasyLab) | 192.168.50.1 /24 |
+
+The LAN interface acts as the gateway for all machines inside the **EasyLab** network.
+
+
