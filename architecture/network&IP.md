@@ -70,12 +70,10 @@ The following VMware networks are used in the lab:
 
 **EasyLab network**
 
-Network: 192.168.50.0/24
+Network: 192.168.50.0/24\
 Name: EasyLab
 
 ### pfSense Interfaces
-
-pfSense connects the two networks together.
 
 | Interface | Network          | Configuration    |
 | --------- | ---------------- | ---------------- |
