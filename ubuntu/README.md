@@ -151,12 +151,50 @@ The following services are running on this Ubuntu machine:
 | MySQL   | Database server             |
 | Samba   | File sharing inside the lab |
 
-## Purpose in the Lab
 
-This server is used to:
+## Connectivity Tests
 
-* practice Linux server administration
-* host simple services
-* test network connectivity
-* perform scans from the Kali Linux machine using tools like **nmap**
-* observe traffic using **Wireshark**
+Basic connectivity between the router (pfSense), Kali Linux and Ubuntu Server was successfully tested.
+
+### Network Discovery
+
+The network was scanned from the Kali Linux machine using **nmap**.
+
+```bash
+nmap 192.168.50.0/24
+```
+
+Scan results showed three active hosts:
+
+```
+192.168.50.1  - pfSense (gateway)
+192.168.50.10 - Ubuntu Server
+192.168.50.20 - Kali Linux
+```
+
+### Samba Share Test
+
+The Samba server running on Ubuntu was tested from the Kali machine.
+
+List available shares:
+
+```bash
+smbclient -L //192.168.50.10
+```
+
+Connect to the shared folder:
+
+```bash
+smbclient //192.168.50.10/share
+```
+
+### File Operations
+
+After connecting to the share, basic file operations were tested:
+
+* creating files
+* creating directories
+* verifying access permissions
+
+These tests confirmed that the Samba share is accessible from other machines in the lab network.
+
