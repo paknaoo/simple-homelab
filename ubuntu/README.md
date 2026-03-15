@@ -6,8 +6,8 @@ Two Ubuntu servers are used in this homelab.
 
 | Server          | IP Address    | Role                                  |
 | --------------- | ------------- | ------------------------------------- |
-| Ubuntu Server 1 | 192.168.50.10 | Web, database and file server         |
-| Ubuntu Server 2 | 192.168.50.30 | Docker host and container environment |
+| Ubuntu Desktop  | 192.168.50.10 | Web, database and file server         |
+| Ubuntu Server   | 192.168.50.30 | Docker host and container environment |
 
 The first server is used to practice traditional Linux services, while the second server is used for container-based workloads with Docker and Portainer.
 
