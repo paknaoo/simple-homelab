@@ -80,7 +80,7 @@ Login credentials are displayed at the end of the installation process.
 The Wazuh server is configured to receive data from agents installed on:
 
 * Docker host (**192.168.50.30**)
-* (future) additional lab machines
+* Kali Linux (**192.168.50.20**)
 
 Agents send:
 
@@ -113,7 +113,6 @@ This system acts as a **basic SIEM platform** within the homelab.
 
 ## Future Improvements
 
-* add more agents (Ubuntu Desktop, Kali Linux)
 * create custom detection rules
 * integrate with vulnerability scanning tools
 * simulate attacks and analyze alerts
