@@ -1,38 +1,44 @@
-## Docker Environment
+# Docker Host (Ubuntu Server)
 
-A second Ubuntu Server was installed in the lab to practice **containerization with Docker** and basic container management.
+## Overview
 
-### Ubuntu Installation
+This Ubuntu Server (**192.168.50.30**) is used as a **Docker host** in the homelab.
 
-Ubuntu Server was downloaded and installed as a virtual machine.
+It is dedicated to containerized workloads, container management, and basic security monitoring using Wazuh.
 
-The following steps were completed successfully:
+---
+
+## Ubuntu Installation
+
+Ubuntu Server was installed as a virtual machine in VMware Workstation.
+
+The following steps were completed:
 
 * Ubuntu Server installation
 * Static IP configuration
 * SSH installation and configuration
 
-### Remote Administration
+---
 
-The server was accessed remotely from the Kali Linux machine using SSH:
+## Remote Administration
+
+The server is managed remotely from the Kali Linux machine using SSH:
 
 ```bash
-ssh adam@192.168.50.20
+ssh adam@192.168.50.30
 ```
 
-All Docker installation steps were performed remotely through the SSH session.
+All configuration steps were performed remotely through the SSH session.
 
 ---
 
 ## Docker Installation
 
-Docker Engine was installed following the official Docker documentation:
+Docker Engine was installed using the official Docker documentation:
 
 https://docs.docker.com/engine/install/ubuntu/
 
 ### Add Docker Repository
-
-Add Docker's official GPG key:
 
 ```bash
 sudo apt update
@@ -41,8 +47,6 @@ sudo install -m 0755 -d /etc/apt/keyrings
 sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
 sudo chmod a+r /etc/apt/keyrings/docker.asc
 ```
-
-Add the Docker repository to APT sources:
 
 ```bash
 sudo tee /etc/apt/sources.list.d/docker.sources <<EOF
@@ -54,41 +58,35 @@ Signed-By: /etc/apt/keyrings/docker.asc
 EOF
 ```
 
-Update package list:
-
 ```bash
 sudo apt update
 ```
 
-### Install Docker Packages
+### Install Docker
 
 ```bash
 sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 ```
 
-### Verify Docker Installation
-
-Docker installation was verified by running the test container:
+### Verify Installation
 
 ```bash
 sudo docker run hello-world
 ```
 
-The container executed successfully, confirming that Docker was installed correctly.
-
 ---
 
 ## Portainer Installation
 
-Portainer was installed to provide a **web-based management interface for Docker containers**.
+Portainer was deployed to provide a web-based interface for Docker management.
 
-### Create Portainer Data Volume
+### Create Volume
 
 ```bash
 sudo docker volume create portainer_data
 ```
 
-### Run the Portainer Container
+### Run Container
 
 ```bash
 docker run -d \
@@ -101,7 +99,7 @@ docker run -d \
 portainer/portainer-ce:sts
 ```
 
-### Verify Container Status
+### Verify
 
 ```bash
 docker ps
@@ -111,24 +109,133 @@ docker ps
 
 ## Accessing Portainer
 
-The Portainer web interface can be accessed from a web browser:
-
 ```
-https://192.168.50.20:9443
+https://192.168.50.30:9443
 ```
-
-(Replace the IP address with the address of the server running Portainer.)
 
 ---
 
-## Container Testing
+## Container Deployment
 
-Portainer was used to perform basic container management tasks:
+Containers were deployed using Portainer and pulled from **Docker Hub**.
 
-* creating a new **Docker container**
-* deploying an **Nginx container**
-* creating a **new Docker network**
-* managing containers through the **Portainer GUI**
+### Test Containers
 
-These tests confirmed that the Docker environment is functioning correctly inside the lab.
+* Nginx container
+* Custom Docker networks
 
+---
+
+## Vulnerable Applications
+
+The following intentionally vulnerable applications were deployed:
+
+* **bWAPP**
+* **DVWA (vulnerables/web-dvwa)**
+* **WebGoat**
+
+### Purpose
+
+These applications are used to:
+
+* practice vulnerability scanning using **Nmap**
+* test web application security
+* simulate real-world vulnerable environments
+* perform testing from the Kali Linux machine
+
+---
+
+## Wazuh Agent Installation
+
+The Wazuh agent was installed to monitor the Docker host and container activity.
+
+### Add Repository
+
+```bash
+sudo apt-get install gnupg apt-transport-https
+
+curl -s https://packages.wazuh.com/key/GPG-KEY-WAZUH | \
+gpg --no-default-keyring \
+--keyring gnupg-ring:/usr/share/keyrings/wazuh.gpg --import
+
+sudo chmod 644 /usr/share/keyrings/wazuh.gpg
+
+echo "deb [signed-by=/usr/share/keyrings/wazuh.gpg] https://packages.wazuh.com/4.x/apt/ stable main" | \
+sudo tee -a /etc/apt/sources.list.d/wazuh.list
+
+sudo apt-get update
+```
+
+### Install Agent
+
+```bash
+WAZUH_MANAGER="<MANAGER_IP>" sudo apt-get install wazuh-agent
+```
+
+---
+
+## Docker Monitoring with Wazuh
+
+### Step 1 – Python Environment
+
+```bash
+python3 -m venv /var/ossec/venv
+source /var/ossec/venv/bin/activate
+pip install --upgrade pip
+```
+
+Edit listener script:
+
+```bash
+sudo nano /var/ossec/wodles/docker/DockerListener
+```
+
+Change shebang:
+
+```bash
+#!/var/ossec/venv/bin/python3
+```
+
+Install dependencies:
+
+```bash
+pip3 install docker==7.1.0 urllib3==1.26.20 requests==2.32.2 --break-system-packages
+```
+
+---
+
+### Step 2 – Enable Docker Listener
+
+Edit config:
+
+```bash
+sudo nano /var/ossec/etc/ossec.conf
+```
+
+Add:
+
+```xml
+<wodle name="docker-listener">
+  <disabled>no</disabled>
+</wodle>
+```
+
+Restart agent:
+
+```bash
+sudo systemctl restart wazuh-agent
+```
+
+---
+
+## Purpose
+
+This Docker host is used to:
+
+* run containerized applications
+* manage containers using Portainer
+* simulate vulnerable environments
+* perform security testing from Kali Linux
+* monitor system and container activity using Wazuh
+
+This setup combines **containerization and security monitoring** in a single lab environment.
